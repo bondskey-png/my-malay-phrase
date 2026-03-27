@@ -9,23 +9,36 @@ async function displayTodaysPhrase() {
         
         const malayPhrases = await response.json();
 
-        // --- ここから修正 ---
+        // 1. 今日の日付を「20260328」という純粋な数字にする
         const now = new Date();
-        // 日本のタイムゾーン（Asia/Tokyo）で YYYY-MM-DD 形式を取得する
-        const todayStr = now.toLocaleDateString('sv-SE', { timeZone: 'Asia/Tokyo' }); 
-        // --- ここまで修正 ---
+        const y = now.getFullYear();
+        const m = String(now.getMonth() + 1).padStart(2, '0');
+        const d = String(now.getDate()).padStart(2, '0');
+        const todayNum = parseInt(`${y}${m}${d}`); 
 
-        // データの中から今日の日付を探す
-        const item = malayPhrases.find(p => p.date && p.date.startsWith(todayStr));
+        // 2. データを「数字」に変換して、今日以前のものだけに絞り込む
+        // 2026-03-29 -> 20260329 に変換して比較
+        const filteredPhrases = malayPhrases.filter(p => {
+            if (!p.date) return false;
+            const pDateNum = parseInt(p.date.replace(/-/g, '').substring(0, 8));
+            return pDateNum <= todayNum; 
+        });
 
-        if (item) {
-            updateDisplay(item);      
-            displayArchive(malayPhrases); 
-        } else if (malayPhrases.length > 0) {
-            // 今日がなければリストの先頭（最新）を表示
-            updateDisplay(malayPhrases[0]);
-            displayArchive(malayPhrases);
+        // 3. 日付の「新しい順」に並び替える
+        filteredPhrases.sort((a, b) => {
+            const numA = parseInt(a.date.replace(/-/g, '').substring(0, 8));
+            const numB = parseInt(b.date.replace(/-/g, '').substring(0, 8));
+            return numB - numA;
+        });
+
+        // 4. 表示処理
+        if (filteredPhrases.length > 0) {
+            updateDisplay(filteredPhrases[0]);
+            displayArchive(filteredPhrases); 
+        } else {
+            document.getElementById('phrase').innerText = "本日のフレーズは準備中です。";
         }
+
     } catch (error) {
         console.error("Connection Error:", error);
         const phraseEl = document.getElementById('phrase');
@@ -88,9 +101,24 @@ function displayArchive(allPhrases) {
     if (!listElement) return;
     listElement.innerHTML = "";
     
-    allPhrases.forEach(item => {
+    // 今日の日付を取得 (比較用)
+    const now = new Date();
+    const y = now.getFullYear();
+    const m = String(now.getMonth() + 1).padStart(2, '0');
+    const d = String(now.getDate()).padStart(2, '0');
+    const todayStr = `${y}-${m}-${d}`;
+
+    // 1. 今日以前（今日を含む）のデータだけに絞り込む
+    // 2. 日付の新しい順（降順）に並び替える
+    const filteredPhrases = allPhrases
+        .filter(item => item.date && item.date <= todayStr) 
+        .sort((a, b) => (a.date < b.date ? 1 : -1));
+
+    filteredPhrases.forEach(item => {
         const li = document.createElement('li');
         li.className = "archive-item";
+        
+        // 表示用の日付整形
         const displayDate = item.date ? item.date.split('T')[0] : "";
         
         li.innerHTML = `
@@ -98,6 +126,7 @@ function displayArchive(allPhrases) {
             <strong class="archive-phrase">${item.phrase}</strong>
             <span class="archive-meaning">${item.meaning}</span>
         `;
+        
         li.onclick = () => {
             updateDisplay(item);
             window.scrollTo({ top: 0, behavior: 'smooth' });
