@@ -36,44 +36,53 @@ async function displayTodaysPhrase() {
 window.onload = displayTodaysPhrase;
 
 function updateDisplay(item) {
-    // スプレッドシートのヘッダー名と一致しているか確認してください
+    // 1. 確実に存在する基本項目の書き込み
     document.getElementById('category').innerText = `【${item.category || "日常"}】`;
     document.getElementById('phrase').innerText = item.phrase || "";
     document.getElementById('romaji').innerText = `《${item.romaji || ""}》`;
     document.getElementById('meaning').innerText = item.meaning || "";
-    document.getElementById('example1_title').innerText = item.example1_title || "";
-    document.getElementById('example1_malay_A').innerText = item.example1_malay_A || "";
-    document.getElementById('example1_jp_A').innerText = item.example1_jp_A || "";
-    document.getElementById('example1_malay_B').innerText = item.example1_malay_B || "";
-    document.getElementById('example1_jp_B').innerText = item.example1_jp_B || "";
-    document.getElementById('example2_title').innerText = item.example2_title || "";
-    document.getElementById('example2_malay_A').innerText = item.example2_malay_A || "";
-    document.getElementById('example2_jp_A').innerText = item.example2_jp_A || "";
-    document.getElementById('example2_malay_B').innerText = item.example2_malay_B || "";
-    document.getElementById('example2_jp_B').innerText = item.example2_jp_B || "";
-    document.getElementById('tips').innerText = item.Tip || item.tips || ""; // シートの列名に合わせて調整
-
-    const area = document.getElementById('examples-area');
-    area.innerHTML = '<h3>【例文】</h3>';
     
-    // 例文1の表示
-    if(item.example1_title) {
-        area.innerHTML += `<p class="example-title"><strong>${item.example1_title}</strong></p>`;
-        area.innerHTML += `<p><strong>A:</strong> ${item.example1_malay_A}<br><small class="translation">＜${item.example1_jp_A}＞</small><strong>B:</strong> ${item.example1_malay_B}<br><small class="translation">＜${item.example1_jp_B}＞</small></p>`;
-    }
-    // 例文2の表示
-    if(item.example2_title) {
-        area.innerHTML += `<p class="example-title"><strong>${item.example2_title}</strong></p>`;
-        area.innerHTML += `<p><strong>A:</strong> ${item.example2_malay_A}<br><small class="translation">＜${item.example2_jp_A}＞</small><strong>B:</strong> ${item.example2_malay_B}<br><small class="translation">＜${item.example2_jp_B}＞</small></p>`;
+    // tips/Tipの書き込み（index.htmlに id="tips" があることを確認）
+    const tipsElement = document.getElementById('tips');
+    if (tipsElement) {
+        tipsElement.innerText = item.Tip || item.tips || "";
     }
 
-        document.getElementById('speak-btn').onclick = () => {
-        const uttr = new SpeechSynthesisUtterance(item.phrase);
-        uttr.lang = 'ms-MY';
-        window.speechSynthesis.speak(uttr);
-    };
+    // 2. 例文セクション（HTMLを組み立てて流し込む）
+    const area = document.getElementById('examples-area');
+    if (area) {
+        area.innerHTML = '<h3>【例文】</h3>';
+        
+        // 例文1
+        if(item.example1_title) {
+            area.innerHTML += `
+                <p class="example-title"><strong>${item.example1_title}</strong></p>
+                <p><strong>A:</strong> ${item.example1_malay_A}<br>
+                <small class="translation">＜${item.example1_jp_A}＞</small><br>
+                <strong>B:</strong> ${item.example1_malay_B}<br>
+                <small class="translation">＜${item.example1_jp_B}＞</small></p>`;
+        }
+        // 例文2
+        if(item.example2_title) {
+            area.innerHTML += `
+                <p class="example-title"><strong>${item.example2_title}</strong></p>
+                <p><strong>A:</strong> ${item.example2_malay_A}<br>
+                <small class="translation">＜${item.example2_jp_A}＞</small><br>
+                <strong>B:</strong> ${item.example2_malay_B}<br>
+                <small class="translation">＜${item.example2_jp_B}＞</small></p>`;
+        }
+    }
+
+    // 3. 音声ボタンの設定
+    const speakBtn = document.getElementById('speak-btn');
+    if (speakBtn) {
+        speakBtn.onclick = () => {
+            const uttr = new SpeechSynthesisUtterance(item.phrase);
+            uttr.lang = 'ms-MY';
+            window.speechSynthesis.speak(uttr);
+        };
+    }
 }
-
 function displayArchive(allPhrases) {
     const listElement = document.getElementById('phrase-list');
     if (!listElement) return;
