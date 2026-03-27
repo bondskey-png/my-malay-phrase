@@ -1,6 +1,5 @@
 async function displayTodaysPhrase() {
     try {
-        // 【重要】URLを必ず /exec 付きの専用URLに戻してください
         const apiUrl = 'https://script.google.com/macros/s/AKfycbzu59cPXeQO0y0PK8Kvk87BWIbw8Dcvmf_ipO7Nu0MOlW1hQCBsqN9VqelHIVDYbYl8/exec';
         
         const response = await fetch(apiUrl, {
@@ -10,18 +9,20 @@ async function displayTodaysPhrase() {
         
         const malayPhrases = await response.json();
 
+        // --- ここから修正 ---
         const now = new Date();
-        // 日本時間(GMT+9)に合わせて日付を取得
-        const todayStr = now.toLocaleDateString('sv-SE'); // YYYY-MM-DD形式
+        // 日本のタイムゾーン（Asia/Tokyo）で YYYY-MM-DD 形式を取得する
+        const todayStr = now.toLocaleDateString('sv-SE', { timeZone: 'Asia/Tokyo' }); 
+        // --- ここまで修正 ---
 
-        // データの中から今日の日付を探す（先頭一致）
+        // データの中から今日の日付を探す
         const item = malayPhrases.find(p => p.date && p.date.startsWith(todayStr));
 
         if (item) {
             updateDisplay(item);      
             displayArchive(malayPhrases); 
         } else if (malayPhrases.length > 0) {
-            // 今日がなければ一番新しいものを表示
+            // 今日がなければリストの先頭（最新）を表示
             updateDisplay(malayPhrases[0]);
             displayArchive(malayPhrases);
         }
