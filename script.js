@@ -59,14 +59,12 @@ function updateDisplay(item) {
     // 例文1の表示
     if(item.example1_title) {
         area.innerHTML += `<p class="example-title"><strong>${item.example1_title}</strong></p>`;
-        area.innerHTML += `<p><strong>A:</strong> ${item.example1_malay_A}<br><small class="translation">＜${item.example1_jp_A}＞</small></p>`;
-        area.innerHTML += `<p><strong>A:</strong> ${item.example1_malay_B}<br><small class="translation">＜${item.example1_jp_B}＞</small></p>`;
+        area.innerHTML += `<p><strong>A:</strong> ${item.example1_malay_A}<br><small class="translation">＜${item.example1_jp_A}＞</small><strong>B:</strong> ${item.example1_malay_B}<br><small class="translation">＜${item.example1_jp_B}＞</small></p>`;
     }
     // 例文2の表示
     if(item.example2_title) {
         area.innerHTML += `<p class="example-title"><strong>${item.example2_title}</strong></p>`;
-        area.innerHTML += `<p><strong>A:</strong> ${item.example2_malay_A}<br><small class="translation">＜${item.example2_jp_A}＞</small></p>`;
-        area.innerHTML += `<p><strong>A:</strong> ${item.example2_malay_B}<br><small class="translation">＜${item.example2_jp_B}＞</small></p>`;
+        area.innerHTML += `<p><strong>A:</strong> ${item.example2_malay_A}<br><small class="translation">＜${item.example2_jp_A}＞</small><strong>B:</strong> ${item.example2_malay_B}<br><small class="translation">＜${item.example2_jp_B}＞</small></p>`;
     }
 
         document.getElementById('speak-btn').onclick = () => {
