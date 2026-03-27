@@ -42,15 +42,15 @@ function updateDisplay(item) {
     document.getElementById('romaji').innerText = `《${item.romaji || ""}》`;
     document.getElementById('meaning').innerText = item.meaning || "";
     document.getElementById('example1_title').innerText = item.example1_title || "";
-    document.getElementById('example1_malay').innerText = item.example1_malay || "";
-    document.getElementById('example1_jp').innerText = item.example1_jp || "";
-    document.getElementById('example1_malay').innerText = item.example1_malay || "";
-    document.getElementById('example1_jp').innerText = item.example1_jp || "";
+    document.getElementById('example1_malay_A').innerText = item.example1_malay_A || "";
+    document.getElementById('example1_jp_A').innerText = item.example1_jp_A || "";
+    document.getElementById('example1_malay_B').innerText = item.example1_malay_B || "";
+    document.getElementById('example1_jp_B').innerText = item.example1_jp_B || "";
     document.getElementById('example2_title').innerText = item.example2_title || "";
-    document.getElementById('example2_malay').innerText = item.example2_malay || "";
-    document.getElementById('example2_jp').innerText = item.example2_jp || "";
-    document.getElementById('example2_malay').innerText = item.example2_malay || "";
-    document.getElementById('example2_jp').innerText = item.example2_jp || "";
+    document.getElementById('example2_malay_A').innerText = item.example2_malay_A || "";
+    document.getElementById('example2_jp_A').innerText = item.example2_jp_A || "";
+    document.getElementById('example2_malay_B').innerText = item.example2_malay_B || "";
+    document.getElementById('example2_jp_B').innerText = item.example2_jp_B || "";
     document.getElementById('tips').innerText = item.Tip || item.tips || ""; // シートの列名に合わせて調整
 
     const area = document.getElementById('examples-area');
