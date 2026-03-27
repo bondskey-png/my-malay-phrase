@@ -48,18 +48,43 @@ section { border-top: 1px solid #eee; margin-top: 20px; padding-top: 10px; }
 
 .archive-item:hover { background: #f0f7ff; }
 
-/* 会話の1行分 */
+/* --- 例文セクション全体の調整 --- */
+#examples-area {
+    margin-top: 20px;
+}
+
+/* 例文のタイトル（ここを修正しました） */
+.example-title {
+    display: block; 
+    width: 100%; /* 横いっぱいに広げる */
+    background-color: #e9ecef;
+    color: #003366;
+    font-weight: bold;
+    padding: 8px 12px;
+    border-radius: 5px;
+    margin: 20px 0 10px 0;
+    border-left: 4px solid #003366;
+}
+
+/* 会話の1つのまとまり（AとBのセット） */
+.chat-row {
+    margin-bottom: 20px;
+}
+
+/* 会話の1行（pタグ） */
 .chat-row p {
-    margin-bottom: 20px !important;
+    margin-bottom: 10px !important;
     background-color: #f8f9fa;
     padding: 12px !important;
     border-radius: 8px;
+    display: block;
+    width: auto; /* 縦書き防止 */
 }
 
-/* AやBの丸いアイコン */
-#examples-area strong {
+/* 話し手（A, B）の丸いアイコン：pタグの中のstrongだけに限定 */
+.chat-row p strong {
     display: inline-block;
-    width: 24px;
+    width: 24px;   /* アイコンの幅 */
     height: 24px;
     line-height: 24px;
     text-align: center;
@@ -68,6 +93,7 @@ section { border-top: 1px solid #eee; margin-top: 20px; padding-top: 10px; }
     border-radius: 50%;
     margin-right: 8px;
     font-size: 0.75rem;
+    flex-shrink: 0; /* 潰れないように固定 */
 }
 
 /* 日本語訳のライン */
