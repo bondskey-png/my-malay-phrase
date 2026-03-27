@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>毎日1つマレー語</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="daily-content">
+    <p id="category" class="tag">読み込み中...</p>
+    <div class="phrase-container">
+        <h1 id="phrase">Selamat Pagi</h1>
+        <button id="speak-btn" title="発音を聞く">🔊 再生</button>
+    </div>
+    <p id="romaji" class="pronunciation"></p>
+    <h2 id="meaning"></h2>
+
+    <section>
+        <h3>【ニュアンス解説】</h3>
+        <p id="nuance"></p>
+    </section>
+
+    <section id="examples-area">
+        <h3>【例文】</h3>
+        <!-- JSで挿入 -->
+    </section>
+
+    <section>
+        <p id="tips" class="cultural-note"></p>
+    </section>
+</div>
+
+<div id="archive-section">
+    <h3>📚 過去のフレーズ一覧</h3>
+    <ul id="phrase-list"></ul>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
