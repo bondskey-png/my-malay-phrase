@@ -1,6 +1,7 @@
 async function displayTodaysPhrase() {
     try {
-        const apiUrl = 'https://script.google.com';
+        // 【重要】URLを必ず /exec 付きの専用URLに戻してください
+        const apiUrl = 'https://script.google.com/macros/s/AKfycbzu59cPXeQO0y0PK8Kvk87BWIbw8Dcvmf_ipO7Nu0MOlW1hQCBsqN9VqelHIVDYbYl8/exec';
         
         const response = await fetch(apiUrl, {
             method: "GET",
@@ -10,14 +11,17 @@ async function displayTodaysPhrase() {
         const malayPhrases = await response.json();
 
         const now = new Date();
-        const todayStr = now.toISOString().split('T')[0]; 
+        // 日本時間(GMT+9)に合わせて日付を取得
+        const todayStr = now.toLocaleDateString('sv-SE'); // YYYY-MM-DD形式
 
-        const item = malayPhrases.find(p => p.date.startsWith(todayStr));
+        // データの中から今日の日付を探す（先頭一致）
+        const item = malayPhrases.find(p => p.date && p.date.startsWith(todayStr));
 
         if (item) {
             updateDisplay(item);      
             displayArchive(malayPhrases); 
         } else if (malayPhrases.length > 0) {
+            // 今日がなければ一番新しいものを表示
             updateDisplay(malayPhrases[0]);
             displayArchive(malayPhrases);
         }
@@ -29,23 +33,32 @@ async function displayTodaysPhrase() {
 }
 
 function updateDisplay(item) {
-    // 要素が存在するか確認してから書き込む補助関数
-    const setElText = (id, text) => {
-        const el = document.getElementById(id);
-        if (el) el.innerText = text;
-    };
+    if (!item) return;
 
-    setElText('category', `【${item.category || "日常"}】`);
-    setElText('phrase', item.phrase || "");
-    setElText('romaji', `《${item.romaji || ""}》`);
-    setElText('meaning', item.meaning || "");
-    setElText('nuance', item.nuance || ""); // ニュアンス解説を反映
-    setElText('tips', item.Tip || item.tips || ""); // 文化紹介を反映
+    // 要素が存在するか徹底的にチェックして書き込む
+    const elCategory = document.getElementById('category');
+    if (elCategory) elCategory.innerText = `【${item.category || "日常"}】`;
+
+    const elPhrase = document.getElementById('phrase');
+    if (elPhrase) elPhrase.innerText = item.phrase || "";
+
+    const elRomaji = document.getElementById('romaji');
+    if (elRomaji) elRomaji.innerText = `《${item.romaji || ""}》`;
+
+    const elMeaning = document.getElementById('meaning');
+    if (elMeaning) elMeaning.innerText = item.meaning || "";
+
+    const elNuance = document.getElementById('nuance');
+    if (elNuance) elNuance.innerText = item.nuance || "";
+
+    const elTips = document.getElementById('tips');
+    if (elTips) elTips.innerText = item.Tip || item.tips || "";
 
     const area = document.getElementById('examples-area');
     if (area) {
         area.innerHTML = '<h3>【例文】</h3>';
         
+        // 例文1
         if(item.example1_title) {
             area.innerHTML += `
                 <p class="example-title"><strong>${item.example1_title}</strong></p>
@@ -54,6 +67,7 @@ function updateDisplay(item) {
                 <strong>B:</strong> ${item.example1_malay_B}<br>
                 <small class="translation">＜${item.example1_jp_B}＞</small></p>`;
         }
+        // 例文2
         if(item.example2_title) {
             area.innerHTML += `
                 <p class="example-title"><strong>${item.example2_title}</strong></p>
