@@ -57,25 +57,19 @@ function updateDisplay(item) {
     const area = document.getElementById('examples-area');
     if (area) {
         area.innerHTML = '<h3>【例文】</h3>';
-        
-        // 例文1
-        if(item.example1_title) {
-            area.innerHTML += `
-                <p class="example-title"><strong>${item.example1_title}</strong></p>
-                <p><strong>A:</strong> ${item.example1_malay_A}<br>
-                <small class="translation">＜${item.example1_jp_A}＞</small><br>
-                <strong>B:</strong> ${item.example1_malay_B}<br>
-                <small class="translation">＜${item.example1_jp_B}＞</small></p>`;
-        }
-        // 例文2
-        if(item.example2_title) {
-            area.innerHTML += `
-                <p class="example-title"><strong>${item.example2_title}</strong></p>
-                <p><strong>A:</strong> ${item.example2_malay_A}<br>
-                <small class="translation">＜${item.example2_jp_A}＞</small><br>
-                <strong>B:</strong> ${item.example2_malay_B}<br>
-                <small class="translation">＜${item.example2_jp_B}＞</small></p>`;
-        }
+    
+        const createExample = (title, m_a, j_a, m_b, j_b) => {
+            if (!title) return "";
+            return `
+                <p class="example-title">${title}</p>
+                <div class="chat-row">
+                    <p><strong>A</strong> ${m_a}<br><small class="translation">＜${j_a}＞</small></p>
+                    <p><strong>B</strong> ${m_b}<br><small class="translation">＜${j_b}＞</small></p>
+                </div>`;
+    };
+
+    area.innerHTML += createExample(item.example1_title, item.example1_malay_A, item.example1_jp_A, item.example1_malay_B, item.example1_jp_B);
+    area.innerHTML += createExample(item.example2_title, item.example2_malay_A, item.example2_jp_A, item.example2_malay_B, item.example2_jp_B);
     }
 
     const speakBtn = document.getElementById('speak-btn');
