@@ -34,3 +34,58 @@ async function displayTodaysPhrase() {
 
 // ページ読み込み時に実行
 window.onload = displayTodaysPhrase;
+
+function updateDisplay(item) {
+    // スプレッドシートのヘッダー名と一致しているか確認してください
+    document.getElementById('category').innerText = `【${item.category || "日常"}】`;
+    document.getElementById('phrase').innerText = item.phrase || "";
+    document.getElementById('romaji').innerText = `《${item.romaji || ""}》`;
+    document.getElementById('meaning').innerText = item.meaning || "";
+    document.getElementById('nuance').innerText = item.nuance || "";
+    document.getElementById('tips').innerText = item.Tip || item.tips || ""; // シートの列名に合わせて調整
+
+    const area = document.getElementById('examples-area');
+    area.innerHTML = '<h3>【例文】</h3>';
+    
+    // 例文1の表示
+    if(item.example1_title) {
+        area.innerHTML += `<p class="example-title"><strong>${item.example1_title}</strong></p>`;
+        area.innerHTML += `<p><strong>A:</strong> ${item.example1_malay}<br><small class="translation">＜${item.example1_jp}＞</small></p>`;
+    }
+    // 例文2の表示
+    if(item.example2_title) {
+        area.innerHTML += `<p class="example-title"><strong>${item.example2_title}</strong></p>`;
+        area.innerHTML += `<p><strong>A:</strong> ${item.example2_malay}<br><small class="translation">＜${item.example2_jp}＞</small></p>`;
+    }
+
+        document.getElementById('speak-btn').onclick = () => {
+        const uttr = new SpeechSynthesisUtterance(item.phrase);
+        uttr.lang = 'ms-MY';
+        window.speechSynthesis.speak(uttr);
+    };
+}
+
+function displayArchive(allPhrases) {
+    const listElement = document.getElementById('phrase-list');
+    if (!listElement) return;
+    listElement.innerHTML = ""; // 既存リストをクリア
+    
+    allPhrases.forEach(item => {
+        const li = document.createElement('li');
+        li.className = "archive-item";
+        // 日付表示の整形
+        const displayDate = item.date ? item.date.split('T')[0] : "";
+        
+        li.innerHTML = `
+            <span class="archive-date">${displayDate}</span>
+            <strong class="archive-phrase">${item.phrase}</strong>
+            <span class="archive-meaning">${item.meaning}</span>
+        `;
+        // クリックでメイン画面を更新
+        li.onclick = () => {
+            updateDisplay(item);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
+        listElement.appendChild(li);
+    });
+}
