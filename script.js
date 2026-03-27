@@ -1,23 +1,28 @@
 async function displayTodaysPhrase() {
     try {
-        // 1. あなたの確認済みURLをここに貼り付け
-        const apiUrl = 'https://script.google.com';
+        // 1. 【重要】末尾が /exec で終わる「あなたの専用URL」に差し替えてください
+        const apiUrl = 'https://script.google.com/macros/s/AKfycbzu59cPXeQO0y0PK8Kvk87BWIbw8Dcvmf_ipO7Nu0MOlW1hQCBsqN9VqelHIVDYbYl8/exec';
         
-        const response = await fetch(apiUrl);
+        const response = await fetch(apiUrl, {
+            method: "GET",
+            // mode: "cors" は不要（削除）にし、redirect のみ残すのがGASの定石です
+            redirect: "follow" 
+        });
+        
         const malayPhrases = await response.json();
 
         // 2. 今日の日付を取得 (YYYY-MM-DD形式)
         const now = new Date();
         const todayStr = now.toISOString().split('T')[0]; 
 
-        // 3. データの中から今日の日付（先頭一致）を探す
+        // 3. データの中から今日の日付を探す
         const item = malayPhrases.find(p => p.date.startsWith(todayStr));
 
         if (item) {
             updateDisplay(item);      
             displayArchive(malayPhrases); 
-        } else {
-            // テスト用：データが見つからない場合は、最新のデータを表示する
+        } else if (malayPhrases.length > 0) {
+            // 4. データが見つからない場合は、最初の1件を表示する
             updateDisplay(malayPhrases[0]);
             displayArchive(malayPhrases);
         }
