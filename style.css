@@ -150,7 +150,10 @@ section { border-top: 1px solid #eee; margin-top: 20px; padding-top: 10px; }
 }
 
 .blog-text {
-    font-size: 0.9rem;
-    color: #555;
-    white-space: pre-wrap; /* 改行を反映 */
+    font-size: 0.95rem;
+    color: #444;
+    line-height: 1.7;
+    /* ↓ これが重要：スプレッドシートの改行をそのまま画面に反映させます */
+    white-space: pre-wrap; 
+    margin-top: 10px;
 }
